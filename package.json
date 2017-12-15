@@ -1,0 +1,28 @@
+{
+  "name": "wowbuddy-miner",
+  "version": "0.0.1",
+  "description": "wowbuddy data miner",
+  "main": "lib/index",
+  "types": "lib/index",
+  "scripts": {
+    "start": "npm run build:live",
+    "build": "tsc",
+    "build:live": "tsc -w",
+    "build:live:run": "nodemon --exec ./node_modules/.bin/ts-node -- ./index.ts"
+  },
+  "author": "Kirill Ivanov",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^8.5.1",
+    "nodemon": "^1.13.2",
+    "ts-node": "^4.0.2",
+    "typescript": "^2.6.2"
+  },
+  "dependencies": {
+    "@types/koa": "^2.0.43",
+    "consul": "^0.30.0",
+    "koa": "^2.4.1",
+    "koa-router": "^7.3.0",
+    "yargs": "^10.0.3"
+  }
+}
