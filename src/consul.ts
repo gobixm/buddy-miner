@@ -37,4 +37,19 @@ export class Consul {
         catch (e) {
         }
     }
+
+    async getValue(key: string): Promise<any> {
+        let result = (await this._client.kv.get(key));
+        if (!result) {
+            return {};
+        }
+        return JSON.parse(result.Value);
+    }
+
+    async setValue(key: string, value: any): Promise<void> {
+        await this._client.kv.set({
+            key: key,
+            value: JSON.stringify(value)
+        });
+    }
 }

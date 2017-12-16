@@ -9,11 +9,11 @@ const Router = require('koa-router');
 
 import {Config} from './config/config';
 import {Consul} from "./consul";
+import {Miner} from "./miner";
 
 
-async function bootstrap(config: Config) {
+async function bootstrap(config: Config, consul: Consul) {
     try {
-        let consul = new Consul(config);
         await consul.register();
     } catch (e) {
         console.error('Failed to bootstrap.', e);
@@ -50,11 +50,18 @@ async function serve(config: Config) {
     }
 }
 
+async function mine(config: Config, consul: Consul) {
+    let miner = new Miner(config, consul);
+    await miner.mine();
+}
+
 async function run() {
     let config = new Config();
     await config.load();
-    await bootstrap(config);
+    let consul = new Consul(config);
+    await bootstrap(config, consul);
     await serve(config);
+    await mine(config, consul);
 }
 
 run();
