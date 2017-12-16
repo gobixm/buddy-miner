@@ -1,5 +1,3 @@
-import {Middleware} from "koa";
-
 const fs = require('fs');
 const {URL} = require('url');
 const http = require('http');
@@ -7,12 +5,12 @@ const http2 = require('http2');
 const koa = require('koa');
 const Router = require('koa-router');
 
-import {Config} from './config/config';
-import {Consul} from "./consul";
-import {Miner} from "./miner";
+const Config = require('./lib/config/config');
+const Consul = require("./lib/consul");
+const Miner = require("./lib/miner");
 
 
-async function bootstrap(config: Config, consul: Consul) {
+async function bootstrap(consul) {
     try {
         await consul.register();
     } catch (e) {
@@ -21,16 +19,11 @@ async function bootstrap(config: Config, consul: Consul) {
     }
 }
 
-async function serve(config: Config) {
-    const options = {
-        key: fs.readFileSync('./config/ssl/miner.key'),
-        cert: fs.readFileSync('./config/ssl/miner.crt'),
-    };
-
+async function serve(config) {
     const app = new koa();
     const router = new Router();
 
-    router.get('/api/health', function (ctx: any, next: any) {
+    router.get('/api/health', function (ctx) {
         ctx.body = 'alive';
     });
 
@@ -41,25 +34,29 @@ async function serve(config: Config) {
     const url = new URL(config.hosting);
 
     if (url.protocol === 'https') {
+        const options = {
+            key: fs.readFileSync('./config/ssl/miner.key'),
+            cert: fs.readFileSync('./config/ssl/miner.crt'),
+        };
         const server = http2.createSecureServer(options, app.callback());
         server.listen(url.port)
-            .on('error', (err: any) => console.log(err));
+            .on('error', err => console.log(err));
     } else {
         const server = http.createServer();
         http.createServer(app.callback()).listen(url.port);
     }
 }
 
-async function mine(config: Config, consul: Consul) {
+async function mine(config, consul) {
     let miner = new Miner(config, consul);
     await miner.mine();
 }
 
 async function run() {
     let config = new Config();
-    await config.load();
+    await config.loadAsync();
     let consul = new Consul(config);
-    await bootstrap(config, consul);
+    await bootstrap(consul);
     await serve(config);
     await mine(config, consul);
 }
