@@ -1,19 +1,21 @@
-const fs = require('fs');
-const {URL} = require('url');
-const http = require('http');
-const http2 = require('http2');
-const koa = require('koa');
-const Router = require('koa-router');
-const winston = require('winston');
+const fs = require("fs");
+const { URL } = require("url");
+const http = require("http");
+const http2 = require("http2");
+const koa = require("koa");
+const Router = require("koa-router");
+const winston = require("winston");
+const dotenv = require("dotenv");
 
-const logger = require('./lib/log');
-const Config = require('./lib/config/config');
+const logger = require("./lib/log");
+const Config = require("./lib/config/config");
 const Consul = require("./lib/consul");
 const Miner = require("./lib/miner");
 
+dotenv.config();
 
 async function bootstrap(consul) {
-    logger.info('bootstrapping');
+    logger.info("bootstrapping");
     try {
         await consul.registerAsync();
     } catch (e) {
@@ -26,31 +28,31 @@ async function serve(config) {
     const app = new koa();
     const router = new Router();
 
-    router.get('/api/health', function (ctx) {
-        ctx.body = 'alive';
+    router.get("/api/health", function(ctx) {
+        ctx.body = "alive";
     });
 
-    app
-        .use(router.routes())
-        .use(router.allowedMethods());
+    app.use(router.routes()).use(router.allowedMethods());
 
     const url = new URL(config.hosting);
 
-    if (url.protocol === 'https') {
+    if (url.protocol === "https") {
         const options = {
-            key: fs.readFileSync('./config/ssl/miner.key'),
-            cert: fs.readFileSync('./config/ssl/miner.crt'),
+            key: fs.readFileSync("./config/ssl/miner.key"),
+            cert: fs.readFileSync("./config/ssl/miner.crt")
         };
         logger.info(`start listen on ${url.port} port`);
-        http2.createSecureServer(options, app.callback())
+        http2
+            .createSecureServer(options, app.callback())
             .listen(url.port)
-            .on('error', err => logger.error(err));
+            .on("error", err => logger.error(err));
     } else {
         logger.info(`start listen on ${url.port} port`);
         const server = http.createServer();
-        http.createServer(app.callback())
+        http
+            .createServer(app.callback())
             .listen(url.port)
-            .on('error', err => logger.error(err));
+            .on("error", err => logger.error(err));
     }
 }
 
@@ -60,7 +62,7 @@ async function mine(config, consul) {
 }
 
 async function run() {
-    logger.info('loading config');
+    logger.info("loading config");
     let config = new Config();
     await config.loadAsync();
     let consul = new Consul(config);
@@ -71,8 +73,7 @@ async function run() {
 
 run();
 
-process.on('uncaughtException', (err) => {
+process.on("uncaughtException", err => {
     logger.error(err);
-    process.exit(1)
+    process.exit(1);
 });
-
