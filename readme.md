@@ -1,6 +1,6 @@
 # Buddy Miner
 
-*Pulls auction data via battle net api and publishes it to kafka topic:*
+*Pulls auction data via battle net api and publishes it to kafka topic:* **auction-data**
 
 ### Outgoing message format
 ```javascript
