@@ -7,7 +7,11 @@
     "start": "node ./index.js",
     "prettify": "prettier index.js lib/**/*.js --write"
   },
-  "author": "Kirill Ivanov",
+  "author": "Kirill Ivanov <saneargue@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gobixm/buddy-miner.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "prettier": "1.9.2"
