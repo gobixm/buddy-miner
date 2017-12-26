@@ -14,12 +14,11 @@ jobs:
           secure: re7e1R/2Jx8RpT6AEHMgl04iEBWzkqNj96QJhV+FFL2BGZ6R2aiCf6X3TacF0+Wg1HdURB3wAFEEMCE0SEj51EAR2d57z1XVQQ64u3kFRkZPprJCELRpdXyjVaweaH/MB9eah0OvgrqgaVYF1Tr8QiyNErcWcXgnSzt8uJ2E62raI+dpZQCehPvk/YWCuJ9TS779zv/1QNbxPUgkFTgpiaPTXC3HhNVwBsFsyWehGy2It4aWPIyrfoG4SgK7KP+gQY9qvYcrNUe3Mdwal72E0ASiRn+nQ545a9dMlbCFtqozcH1pQa029BpoDJ0TXRvy54IzbkNWa+fpg9394jI1mBgwFX41AkQt27hzBv5RndS56nyoSVs/RJoYHz9NX4vvJi+uSh48OWj+M8YadiK0xDObE8ApmfQ6u5TTojVD+Mod0dkGDaNlRFW+bUuh+gMwrg+9bke2vy2GqCOl+jfI3DvOigzWYFMtXMnM6DmZhbfTPVgEEXdx5NI+ODD4poOankT3w+lVqdJ9vGnSLN3UvBcuKKLi5n4kcpSraw9q4xNDFSZZL3RgJ7+9tPbWp6qeUpMDQiRsPJxym31bRfcAmod5Xk6z/aT0x5Zyfdv2jnFWms+NFLrAzbScaSZPbBrVzgUb3Cj7pYf10yr9bjRCSViPzDDRbi/zfi7ISzY41mk=
         on:
           tags: true
-          repo: gobixm/buddy-miner
 
     - stage: build docker image
       script:
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-      - docker build -f Dockerfile.build -t buddy-miner .
+      - docker build -f Dockerfile -t buddy-miner .
       - docker images
       - docker tag buddy-miner $DOCKER_USERNAME/buddy-miner
       - docker push $DOCKER_USERNAME/buddy-miner

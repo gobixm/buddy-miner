@@ -1,4 +1,5 @@
 # Buddy Miner
+[![Build Status](https://travis-ci.org/gobixm/buddy-miner.svg?branch=master)](https://travis-ci.org/gobixm/buddy-miner)
 
 *Pulls auction data via battle net api and publishes it to kafka topic:* **auction-data**
 
