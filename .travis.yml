@@ -7,6 +7,7 @@ services:
 jobs:
   include:
     - stage: publish npm
+      if: tag =~ ^v1
       deploy:
         provider: npm
         email: saneargue@gmail.com
@@ -16,9 +17,10 @@ jobs:
           tags: true
 
     - stage: build docker image
+      if: tag =~ ^(?!\s*$).+
       script:
       - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-      - docker build -f Dockerfile -t buddy-miner .
+      - docker build -f Dockerfile -t wowbuddy-miner .
       - docker images
-      - docker tag buddy-miner $DOCKER_USERNAME/buddy-miner
-      - docker push $DOCKER_USERNAME/buddy-miner
+      - docker tag wowbuddy-miner $DOCKER_USERNAME/wowbuddy-miner
+      - docker push $DOCKER_USERNAME/wowbuddy-miner
