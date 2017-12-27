@@ -1,6 +1,6 @@
 {
   "name": "wowbuddy-miner",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "wowbuddy data miner",
   "main": "index.js",
   "scripts": {
